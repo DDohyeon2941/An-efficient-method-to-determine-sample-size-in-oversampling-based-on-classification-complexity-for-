@@ -39,61 +39,91 @@ The following imbalanced datasets were used to validate this method, sorted by i
 15. **Mammography**: 7,849 samples, 6 attributes, IR = 29.90
 16. **PC1**: 4,901 samples, 6 attributes, IR = 42.76
 
-## Methodology
+I see! You want a clear explanation of both the **original** classification complexity measures and the **modifications** you’ve made to suit imbalanced data. Here's the version with that structure:
 
-In this study, four key classification complexity measures are used to determine the efficient oversampling size for imbalanced datasets: **F1**, **F2**, **N1**, and **N2**. These measures provide a detailed understanding of the data's structure and class separability.
+---
 
 ### Classification Complexity Measures
 
-#### 1. Feature-Based Complexity Measures
+#### 1. **Feature-Based Complexity Measures**
+
 Feature-based measures assess the discriminative power of individual features in distinguishing between classes.
 
 - **F1 (Maximum Fisher's Discriminant Ratio)**:
-  - This measure estimates the capability of each feature to separate two classes. It is derived from the **Fisher's Discriminant Ratio (FDR)**, which compares the mean difference between the two classes relative to their variance. The F1 score uses the maximum FDR across all features.
-  - Formula:  
-    \[
-    F1 = \frac{1}{1 + \max_d FDR(f_d)}
-    \]
-    Where \(FDR(f_d)\) for feature \(d\) is defined as:
-    \[
-    FDR(f_d) = \frac{(\mu_1 - \mu_2)^2}{\sigma_1^2 + \sigma_2^2}
-    \]
-    Here, \(\mu_1\), \(\mu_2\) are the means of the two classes, and \(\sigma_1^2\), \(\sigma_2^2\) are their variances.
+
+  **Original Definition**:  
+  This measure estimates the capability of each feature to separate two classes. It is derived from the **Fisher's Discriminant Ratio (FDR)**, which compares the mean difference between the two classes relative to their variance. The F1 score uses the maximum FDR across all features.
+  
+  Formula:  
+  \[
+  F1 = \frac{1}{1 + \max_d FDR(f_d)}
+  \]
+  where \(FDR(f_d)\) for feature \(d\) is defined as:
+  \[
+  FDR(f_d) = \frac{(\mu_1 - \mu_2)^2}{\sigma_1^2 + \sigma_2^2}
+  \]
+  Here, \(\mu_1\) and \(\mu_2\) are the means of the two classes, and \(\sigma_1^2\) and \(\sigma_2^2\) are their variances.
+
+  **Modification**:  
+  The F1 measure now specifically focuses on features where the separability between the minority and majority classes is lower. This helps to ensure that attention is given to regions of the feature space where the minority class struggles the most, guiding synthetic sample generation where it’s most needed.
 
 - **F2 (Class Overlap Measure)**:
-  - F2 estimates the overlap between classes along each feature dimension. It is calculated by counting the number of samples that lie in the overlapping region between the two classes for each feature. A higher overlap indicates higher classification complexity.
-  - Formula:  
-    \[
-    F2 = \frac{\min_d \sum_{j=1}^n I(x_{jd} > \max(\min(f^1_d), \min(f^2_d)) \text{ and } x_{jd} < \min(\max(f^1_d), \max(f^2_d)))}{n}
-    \]
-    where \(f^1_d\) and \(f^2_d\) represent the values of feature \(d\) for the two classes, and \(I(\cdot)\) is the indicator function.
 
-#### 2. Neighborhood-Based Complexity Measures
-These measures focus on the local distribution of samples around each instance, particularly the distances to neighbors within and across classes.
+  **Original Definition**:  
+  F2 estimates the overlap between classes along each feature dimension. It is calculated by counting the number of samples that lie in the overlapping region between the two classes for each feature. A higher overlap indicates higher classification complexity.
+  
+  Formula:  
+  \[
+  F2 = \frac{\min_d \sum_{j=1}^n I(x_{jd} > \max(\min(f^1_d), \min(f^2_d)) \text{ and } x_{jd} < \min(\max(f^1_d), \max(f^2_d)))}{n}
+  \]
+  where \(f^1_d\) and \(f^2_d\) represent the values of feature \(d\) for the two classes, and \(I(\cdot)\) is the indicator function.
+
+  **Modification**:  
+  The F2 measure is adapted to include **boundary samples** in the calculation. This modification captures the complexity at the decision boundary, which is particularly critical for imbalanced datasets where the minority class tends to lie near the majority class in these regions. Including these boundary samples helps in identifying areas that need synthetic samples to improve classification performance.
+
+---
+
+#### 2. **Neighborhood-Based Complexity Measures**
+
+Neighborhood-based measures focus on the local distribution of samples around each instance, particularly the distances to neighbors within and across classes.
 
 - **N1 (Intra/Extra Class Distance Ratio)**:
-  - N1 computes the ratio of intra-class distances (distances between a sample and its neighbors from the same class) to extra-class distances (distances to neighbors from the opposite class). A higher ratio indicates that samples are more separable within their own class, reducing classification complexity.
-  - Formula:  
-    \[
-    N1 = \frac{\sum_{i=1}^{n} \sum_{j \in NNk,\text{intra}(x_i)} d(x_i, x_j)}{\sum_{i=1}^{n} \sum_{j \in NNk,\text{extra}(x_i)} d(x_i, x_j) + \sum_{i=1}^{n} \sum_{j \in NNk,\text{intra}(x_i)} d(x_i, x_j)}
-    \]
+
+  **Original Definition**:  
+  N1 computes the ratio of intra-class distances (distances between a sample and its neighbors from the same class) to extra-class distances (distances to neighbors from the opposite class). A higher ratio indicates that samples are more separable within their own class, reducing classification complexity.
+  
+  Formula:  
+  \[
+  N1 = \frac{\sum_{i=1}^{n} \sum_{j \in \text{NNk, intra}(x_i)} d(x_i, x_j)}{\sum_{i=1}^{n} \sum_{j \in \text{NNk, extra}(x_i)} d(x_i, x_j) + \sum_{i=1}^{n} \sum_{j \in \text{NNk, intra}(x_i)} d(x_i, x_j)}
+  \]
+
+  **Modification**:  
+  The N1 measure is extended to consider the **k-nearest neighbors (kNN)** instead of only the nearest neighbor. Additionally, this measure now focuses specifically on the minority class samples, ensuring that the complexity of separating minority samples from majority samples is captured more effectively, which is crucial in imbalanced datasets.
 
 - **N2 (1-Nearest Neighbor Error Rate)**:
-  - N2 calculates the error rate of a 1-nearest neighbor (1-NN) classifier using a leave-one-out cross-validation approach. This measures how often a sample is misclassified by its nearest neighbor, providing insight into the local complexity of the class boundaries.
-  - Formula:  
-    \[
-    N2 = \frac{\sum_{i=1}^{n} I(y_i \neq y_{\text{NN1}}(x_i))}{n}
-    \]
-    where \(y_{\text{NN1}}(x_i)\) is the label of the nearest neighbor of \(x_i\), and \(I(\cdot)\) is the indicator function.
 
-### Summary of Measures:
-- **F1** captures the ability of individual features to separate the classes.
-- **F2** measures the degree of overlap between the classes along each feature.
-- **N1** evaluates the separation between classes based on intra-class and extra-class distances.
-- **N2** calculates the error rate of nearest neighbor classification to gauge the local complexity around the class boundary.
+  **Original Definition**:  
+  N2 calculates the error rate of a 1-nearest neighbor (1-NN) classifier using a leave-one-out cross-validation approach. This measures how often a sample is misclassified by its nearest neighbor, providing insight into the local complexity of the class boundaries.
+  
+  Formula:  
+  \[
+  N2 = \frac{\sum_{i=1}^{n} I(y_i \neq y_{\text{NN1}}(x_i))}{n}
+  \]
+  where \(y_{\text{NN1}}(x_i)\) is the label of the nearest neighbor of \(x_i\), and \(I(\cdot)\) is the indicator function.
 
-These measures are used to adjust the oversampling size dynamically, ensuring that synthetic samples are generated in regions where classification complexity is high, thereby improving performance without excessive oversampling.
+  **Modification**:  
+  N2 is adapted to use **k-nearest neighbors (kNN)** instead of only one nearest neighbor, providing a more comprehensive assessment of local complexity. Additionally, this measure is now focused on minority class samples, capturing the specific challenges faced by minority samples in their nearest-neighbor relationships.
 
+---
+
+### Summary of Modifications:
+
+- **F1** now focuses on features with lower separability for the minority class.
+- **F2** includes boundary samples to better capture class overlap in critical decision boundary regions.
+- **N1** is modified to use k-nearest neighbors and focuses specifically on minority class samples to reflect the difficulty of separating minority instances from the majority.
+- **N2** is extended to use k-nearest neighbors and focuses on the error rate for minority class samples, offering a more nuanced view of complexity in imbalanced datasets.
+
+These modifications ensure that the complexity measures are better suited to address the specific challenges presented by imbalanced datasets, guiding synthetic sampling to the regions where it’s most needed.
 
 ## Results
 Our experiments across 16 different imbalanced datasets show that the proposed oversampling method achieves superior or comparable performance to traditional oversampling techniques while significantly reducing the number of synthetic samples. This not only reduces computational time but also mitigates the risk of overfitting caused by excessive sampling.
