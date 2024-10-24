@@ -55,14 +55,14 @@ Feature-based measures assess the discriminative power of individual features in
   This measure estimates the capability of each feature to separate two classes. It is derived from the **Fisher's Discriminant Ratio (FDR)**, which compares the mean difference between the two classes relative to their variance. The F1 score uses the maximum FDR across all features.
   
   Formula:  
-  $\[
+  $\
   F1 = \frac{1}{1 + \max_d FDR(f_d)}
-  \]$
-  where \(FDR(f_d)\) for feature \(d\) is defined as:
-  \[
+  \$
+  where $\(FDR(f_d)\) for feature \(d\)$ is defined as:
+  $\
   FDR(f_d) = \frac{(\mu_1 - \mu_2)^2}{\sigma_1^2 + \sigma_2^2}
-  \]
-  Here, \(\mu_1\) and \(\mu_2\) are the means of the two classes, and \(\sigma_1^2\) and \(\sigma_2^2\) are their variances.
+  \$
+  Here, $\(\mu_1\)$ and $\(\mu_2\)$ are the means of the two classes, and $\(\sigma_1^2\)$ and $\(\sigma_2^2\)$ are their variances.
 
   **Modification**:  
   The F1 measure now specifically focuses on features where the separability between the minority and majority classes is lower. This helps to ensure that attention is given to regions of the feature space where the minority class struggles the most, guiding synthetic sample generation where it’s most needed.
