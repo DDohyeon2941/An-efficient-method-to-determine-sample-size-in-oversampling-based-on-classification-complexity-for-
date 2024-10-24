@@ -47,14 +47,14 @@ The following imbalanced datasets were used to validate this method, sorted by i
 
 Feature-based measures assess the discriminative power of individual features in distinguishing between classes.
 
-- ### **F1 (Maximum Fisher's Discriminant Ratio)**
+### **F1 (Maximum Fisher's Discriminant Ratio)**
 
 **Original Definition**:  
 F1 measures the ability of features to separate two classes based on their means and variances. A **higher F1** value in this context indicates **greater difficulty in separating** the two classes, meaning the classes have more overlap and are harder to distinguish, suggesting worse performance.
 
 **Modification**:  
 The F1 measure now specifically focuses on features where the separability between the minority and majority classes is lower (i.e., higher complexity). This helps ensure that attention is given to regions of the feature space where the minority class struggles the most, guiding synthetic sample generation to where it’s most needed.
-- **F2 (Class Overlap Measure)**:
+**F2 (Class Overlap Measure)**:
 
   **Original Definition**:  
   F2 assesses the degree of overlap between the classes across each feature. It identifies how much the feature values of the two classes mix together, indicating the complexity of separating them.
