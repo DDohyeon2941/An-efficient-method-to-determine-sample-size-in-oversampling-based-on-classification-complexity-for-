@@ -8,7 +8,6 @@ This repository contains the implementation of an efficient oversampling method 
 - [Methodology](#methodology)
 - [Results](#results)
 - [Contributing](#contributing)
-- [License](#license)
 - [Citation](#citation)
 
 ## Overview
