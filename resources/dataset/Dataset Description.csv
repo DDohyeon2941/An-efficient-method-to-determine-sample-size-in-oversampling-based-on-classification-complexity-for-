@@ -1,0 +1,17 @@
+﻿Data,# of samples,# of attributes,IR
+Abalone,4177,7,9.68
+Ecoli,336,7,8.6
+Glass,213,9,22.67
+Ionosphere,350,34,1.8
+Isolet,7797,617,12
+KC1,1212,21,2.85
+Letter Img,18668,16,28.17
+Mammography,7849,6,29.9
+Oil,937,27,21.85
+Optical Digits,5620,64,9.14
+PC1,4901,6,42.76
+Satimage,6435,36,9.28
+Spectrometer,531,93,10.8
+US Crime,1994,100,12.29
+Wine Quality,3961,11,21.9
+Yeast Me2,1453,8,27.49
