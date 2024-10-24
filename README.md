@@ -66,13 +66,13 @@ Feature-based measures assess the discriminative power of individual features in
 
 Neighborhood-based measures focus on the local distribution of samples around each instance, particularly the distances to neighbors within and across classes.
 
-- **N1 (Intra/Extra Class Distance Ratio)**:
+- ### **N1 (Intra/Extra Class Distance Ratio)**
 
   **Original Definition**:  
-  N1 evaluates how close samples from the same class are to each other compared to samples from different classes. A higher N1 value indicates that the samples are well-separated within their own class, reducing classification complexity.
-
+  N1 evaluates how close samples from the same class are to each other compared to samples from different classes. A **higher N1** value indicates that **samples within the same class are farther apart**, meaning there is **poor intra-class compactness** and potentially **higher classification complexity**.
+  
   **Modification**:  
-  The N1 measure now considers **k-nearest neighbors** instead of just the nearest neighbor, providing a more detailed view of local class separation. Additionally, this measure focuses specifically on the minority class samples, ensuring the method captures the complexity of separating minority samples from the majority class.
+  The N1 measure now considers **k-nearest neighbors (kNN)** instead of just the nearest neighbor, providing a more detailed view of local class separation. Additionally, this measure focuses specifically on the **minority class samples**, ensuring the method captures the complexity of separating minority samples from the majority class.
 
 - **N2 (1-Nearest Neighbor Error Rate)**:
 
