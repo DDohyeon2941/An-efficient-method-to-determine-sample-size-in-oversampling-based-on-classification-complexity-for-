@@ -40,9 +40,60 @@ The following imbalanced datasets were used to validate this method, sorted by i
 16. **PC1**: 4,901 samples, 6 attributes, IR = 42.76
 
 ## Methodology
-### Classification Complexity Measures:
-1. **Feature-based complexity**: Measures the discriminatory power of features to determine how separable the classes are. This helps identify whether more synthetic samples are necessary in specific areas of the feature space.
-2. **Neighborhood-based complexity**: Utilizes nearest-neighbor distances to evaluate the density and separability of classes at the instance level. This ensures that samples are generated where classification is most challenging.
+
+In this study, four key classification complexity measures are used to determine the efficient oversampling size for imbalanced datasets: **F1**, **F2**, **N1**, and **N2**. These measures provide a detailed understanding of the data's structure and class separability.
+
+### Classification Complexity Measures
+
+#### 1. Feature-Based Complexity Measures
+Feature-based measures assess the discriminative power of individual features in distinguishing between classes.
+
+- **F1 (Maximum Fisher's Discriminant Ratio)**:
+  - This measure estimates the capability of each feature to separate two classes. It is derived from the **Fisher's Discriminant Ratio (FDR)**, which compares the mean difference between the two classes relative to their variance. The F1 score uses the maximum FDR across all features.
+  - Formula:  
+    \[
+    F1 = \frac{1}{1 + \max_d FDR(f_d)}
+    \]
+    Where \(FDR(f_d)\) for feature \(d\) is defined as:
+    \[
+    FDR(f_d) = \frac{(\mu_1 - \mu_2)^2}{\sigma_1^2 + \sigma_2^2}
+    \]
+    Here, \(\mu_1\), \(\mu_2\) are the means of the two classes, and \(\sigma_1^2\), \(\sigma_2^2\) are their variances.
+
+- **F2 (Class Overlap Measure)**:
+  - F2 estimates the overlap between classes along each feature dimension. It is calculated by counting the number of samples that lie in the overlapping region between the two classes for each feature. A higher overlap indicates higher classification complexity.
+  - Formula:  
+    \[
+    F2 = \frac{\min_d \sum_{j=1}^n I(x_{jd} > \max(\min(f^1_d), \min(f^2_d)) \text{ and } x_{jd} < \min(\max(f^1_d), \max(f^2_d)))}{n}
+    \]
+    where \(f^1_d\) and \(f^2_d\) represent the values of feature \(d\) for the two classes, and \(I(\cdot)\) is the indicator function.
+
+#### 2. Neighborhood-Based Complexity Measures
+These measures focus on the local distribution of samples around each instance, particularly the distances to neighbors within and across classes.
+
+- **N1 (Intra/Extra Class Distance Ratio)**:
+  - N1 computes the ratio of intra-class distances (distances between a sample and its neighbors from the same class) to extra-class distances (distances to neighbors from the opposite class). A higher ratio indicates that samples are more separable within their own class, reducing classification complexity.
+  - Formula:  
+    \[
+    N1 = \frac{\sum_{i=1}^{n} \sum_{j \in NNk,\text{intra}(x_i)} d(x_i, x_j)}{\sum_{i=1}^{n} \sum_{j \in NNk,\text{extra}(x_i)} d(x_i, x_j) + \sum_{i=1}^{n} \sum_{j \in NNk,\text{intra}(x_i)} d(x_i, x_j)}
+    \]
+
+- **N2 (1-Nearest Neighbor Error Rate)**:
+  - N2 calculates the error rate of a 1-nearest neighbor (1-NN) classifier using a leave-one-out cross-validation approach. This measures how often a sample is misclassified by its nearest neighbor, providing insight into the local complexity of the class boundaries.
+  - Formula:  
+    \[
+    N2 = \frac{\sum_{i=1}^{n} I(y_i \neq y_{\text{NN1}}(x_i))}{n}
+    \]
+    where \(y_{\text{NN1}}(x_i)\) is the label of the nearest neighbor of \(x_i\), and \(I(\cdot)\) is the indicator function.
+
+### Summary of Measures:
+- **F1** captures the ability of individual features to separate the classes.
+- **F2** measures the degree of overlap between the classes along each feature.
+- **N1** evaluates the separation between classes based on intra-class and extra-class distances.
+- **N2** calculates the error rate of nearest neighbor classification to gauge the local complexity around the class boundary.
+
+These measures are used to adjust the oversampling size dynamically, ensuring that synthetic samples are generated in regions where classification complexity is high, thereby improving performance without excessive oversampling.
+
 
 ## Results
 Our experiments across 16 different imbalanced datasets show that the proposed oversampling method achieves superior or comparable performance to traditional oversampling techniques while significantly reducing the number of synthetic samples. This not only reduces computational time but also mitigates the risk of overfitting caused by excessive sampling.
@@ -57,4 +108,4 @@ Our experiments across 16 different imbalanced datasets show that the proposed o
 We welcome contributions to this project. Please submit pull requests or open issues for any bugs or enhancements.
 
 ## References
-For more details, please refer to the full paper on [https://doi.org/10.1016/j.eswa.2021.115442]
+For more details, please refer to the full paper on [ELSEVIER](https://doi.org/10.1016/j.eswa.2021.115442)
