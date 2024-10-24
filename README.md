@@ -105,4 +105,4 @@ Our experiments across 16 different imbalanced datasets show that the proposed o
 We welcome contributions to this project. Please submit pull requests or open issues for any bugs or enhancements.
 
 ## References
-For more details, please refer to the full paper on [ELSEVIER](https://doi.org/10.1016/j.eswa.2021.115442)
+For more details, please refer to the full paper on [ELSEVIER](https://doi.org/10.1016/j.eswa.2021.115442).
